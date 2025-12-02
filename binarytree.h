@@ -66,74 +66,8 @@ BinaryTree(BinaryTree&& other) noexcept
     n = 0;
 }  
 
-<<<<<<< HEAD
     BinaryTree(BinaryTree&& other) noexcept 
         : root(other.root), n(other.n) 
-=======
-template <typename Container>
-class binary_tree_iterator : public general_iterator<Container,  class binary_tree_iterator<Container> > // 
-{  
-public:
-    using Parent = class general_iterator<Container, binary_tree_iterator<Container> >;     \
-    using Node   = typename Container::Node;
-    using Container = binary_tree_iterator<Container>;
-
-  public:
-    binary_tree_iterator(Container *pContainer, Node *pNode) : Parent (pContainer,pNode) {}
-    binary_tree_iterator(Container &other)  : Parent (other) {}
-    binary_tree_iterator(Container &&other) : Parent(other) {} // Move constructor C++11 en adelante
-
-public:
-    // TODO: Fuentes Patrick
-    binary_tree_iterator operator++() {
-        Parent::m_pNode = Parent::m_pNode ? (Node*)Parent::m_pNode->getpNext() : nullptr;
-        return *this;
-    }
-};
-
-template <typename _T>
-struct BinaryTreeAscTraits{
-    using  T         = _T;
-    using  Node      = CBinaryTreeNode<T>;
-    using  CompareFn = less<T>;
-};
-
-template <typename _T>
-struct BinaryTreeDescTraits{
-    using  T         = _T;
-    using  Node      = CBinaryTreeNode<T>;
-    using  CompareFn = greater<T>;
-};
-
-template <typename Traits>
-class CBinaryTree{
-  public:
-    using value_type    = typename Traits::T;
-    using Node          = typename Traits::Node;
-    
-    using CompareFn     = typename Traits::CompareFn;
-    using Container     = CBinaryTree<Traits>;
-    using iterator      = binary_tree_iterator<Container>;
-
-protected:
-    Node    *m_pRoot = nullptr;
-    size_t   m_size  = 0;
-    CompareFn Compfn;
-public: 
-    size_t  size()  const       { return m_size;       }
-    bool    empty() const       { return size() == 0;  }
-    // TODO: insert must receive two paramaters: elem and LinkedValueType value
-    void insert(value_type elem, Ref ref) {
-        m_pRoot = internal_insert(elem, ref, nullptr, nullptr, m_pRoot);
-    }
-
-protected:
-    Node* CreateNode(Node* pParent, value_type elem, Ref ref) {
-        return new Node(pParent, elem, ref);
-    }
-    virtual Node* internal_insert(value_type elem, Ref ref, LinkedValueType value,
-                          Node* pParent, Node*& rpOrigin)
->>>>>>> 0104a03d44ba12cd2ea0003860f373dc5bc775a9
    
  
 private:
