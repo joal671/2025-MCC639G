@@ -52,8 +52,10 @@ BinaryTree(const BinaryTree& other) : root(nullptr), n(0) {
 BinaryTree(BinaryTree&& other) noexcept
     : root(other.root), n(other.n)
 {
+    LOG_INFO("MoveCtor origin=%p root=%p n=%zu", &other, other.root, other.n);
     other.root = nullptr;
     other.n = 0;
+    LOG_INFO("MoveCtor this=%p root=%p n=%zu", this, root, n);
 }
 
 
