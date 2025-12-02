@@ -31,18 +31,40 @@ private:
 
 public:
 
-   
-    // Constructor Copia
+ 
+//  Constructor Principal
+ 
+BinaryTree() : root(nullptr), n(0) {}
 
-    BinaryTree(const BinaryTree& other) : root(nullptr), n(0) {
-        std::lock_guard<std::mutex> lock(other.mtx);
-        if (other.root)
-            root = copySubtree(other.root);
-        n = other.n;
-    }
 
  
-    //  Move Constructor
+//  Constructor Copia  
+BinaryTree(const BinaryTree& other) : root(nullptr), n(0) {
+    if (other.root)
+        root = copySubtree(other.root);
+    n = other.n;
+}
+
+
+ 
+//  Move Constructor
+ 
+BinaryTree(BinaryTree&& other) noexcept
+    : root(other.root), n(other.n)
+{
+    other.root = nullptr;
+    other.n = 0;
+}
+
+
+ 
+//  Destructor
+ 
+~BinaryTree() {
+    clear(root);
+    root = nullptr;
+    n = 0;
+}  
 
 <<<<<<< HEAD
     BinaryTree(BinaryTree&& other) noexcept 
@@ -112,23 +134,8 @@ protected:
     virtual Node* internal_insert(value_type elem, Ref ref, LinkedValueType value,
                           Node* pParent, Node*& rpOrigin)
 >>>>>>> 0104a03d44ba12cd2ea0003860f373dc5bc775a9
-    {
-        other.root = nullptr;
-        other.n = 0;
-    }
-
-
-    // Constructor Principal
-  
-    BinaryTree() : root(nullptr), n(0) {}
-
-
-    // Destructor
-
-    ~BinaryTree() {
-        clear(root);
-    }
-
+   
+ 
 private:
 
     // Copia recursiva
@@ -263,37 +270,33 @@ public:
 
     // inorder (Variadic)
 
-    template <typename F>
-    void inorder(F f) const {
-        inorderRec(root, f);
-    }
+   template <typename F, typename... Args>
+void inorder(F&& f, Args&&... args) const {
+    inorderRec(root, std::forward<F>(f), std::forward<Args>(args)...);
+}
 
-private:
-    template <typename F>
-    void inorderRec(Node* node, F& f) const {
-        if (!node) return;
-        inorderRec(node->left, f);
-        f(node->value);
-        inorderRec(node->right, f);
-    }
-
-public:
+template <typename F, typename... Args>
+void inorderRec(Node* node, F&& f, Args&&... args) const {
+    if (!node) return;
+    inorderRec(node->left, std::forward<F>(f), std::forward<Args>(args)...);
+    std::invoke(std::forward<F>(f), node->value, std::forward<Args>(args)...);
+    inorderRec(node->right, std::forward<F>(f), std::forward<Args>(args)...);
+}
 
     // postorder (Variadic)
 
-    template <typename F>
-    void postorder(F f) const {
-        postorderRec(root, f);
-    }
+template <typename F, typename... Args>
+void postorder(F&& f, Args&&... args) const {
+    postorderRec(root, std::forward<F>(f), std::forward<Args>(args)...);
+}
 
-private:
-    template <typename F>
-    void postorderRec(Node* node, F& f) const {
-        if (!node) return;
-        postorderRec(node->left, f);
-        postorderRec(node->right, f);
-        f(node->value);
-    }
+template <typename F, typename... Args>
+void postorderRec(Node* node, F&& f, Args&&... args) const {
+    if (!node) return;
+    postorderRec(node->left, std::forward<F>(f), std::forward<Args>(args)...);
+    postorderRec(node->right, std::forward<F>(f), std::forward<Args>(args)...);
+    std::invoke(std::forward<F>(f), node->value, std::forward<Args>(args)...);
+}
 
 public:
 
